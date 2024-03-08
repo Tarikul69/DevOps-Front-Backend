@@ -1,0 +1,17 @@
+FROM node:latest
+
+#WORKDIR /app
+
+COPY package.json .
+
+RUN npm install 
+
+
+# copy all files into the image
+COPY . .
+
+RUN npm run build 
+
+EXPOSE 3000
+
+CMD ["npm", "start"]

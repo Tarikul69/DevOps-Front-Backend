@@ -1,0 +1,82 @@
+---
+- name: Deploy full-stack Application
+  hosts: ec2_instance
+  become: yes
+
+  tasks:
+   - name: Make Directory
+     ansible.builtin.file:
+      path: "/Desktop/task01"
+      state: Directory
+
+   - name: Install Git
+     ansible.builtin.package:
+      name: git
+      state: present
+
+   - name: Clone Repo
+     ansible.builtin.git:
+      repo: "https://github.com/Tarikul69/DevOps-Full-Stack-Application-.git"
+      dest: "/Desktop/task01"
+      version: "main"
+
+   - name: Install nginx
+     ansible.builtin.package:
+      name: nginx
+      state: present
+     
+
+    #- name: Remove default config nginx
+    #  ansible.builtin.file:
+     #   path: ""
+
+   - name: Install Docker
+     ansible.builtin.package:
+      name: docker
+      state: present
+
+   - name: Start Docker
+     ansible.builtin.package:
+      name: docker
+      state: started
+      enabled: yes
+
+   - name: Copy Frontend Application
+     ansible.builtin.copy:
+      src: "/home/ta69/Desktop/DevOps/project/full-stack Application"
+      dest: "/Desktop/task01"
+      owner: root
+      group: root
+
+   - name: BUild docker frontend image
+     ansible.builtin.command:
+      chdir: /home/ta69/Desktop/DevOps/project/full-stack Application/frontend
+      cmd: docker build -t frontend:01 . 
+
+   - name: Run frontend container
+     community.docker.docker_container: 
+      name: frontend
+      image: frontend:01
+      state: started
+      published_port:
+          - "3000" 
+
+   - name: Copy Backend Application
+     ansible.builtin.copy:
+      src: "/home/ta69/Desktop/DevOps/project/full-stack Application/backend"
+      dest: "/Desktop/task01"
+      owner: root
+      group: root 
+
+   - name: BUild docker backend image
+     ansible.builtin.command:
+      chdir: /home/ta69/Desktop/DevOps/project/full-stack Application/frontend
+      cmd: docker build -t backend:01 . 
+    
+   - name: Run backend container
+     community.docker.docker_container: 
+      name: backend
+      image: backend:01
+      state: started
+      published_port:
+          - "3000" 
