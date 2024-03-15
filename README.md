@@ -1,6 +1,9 @@
 ## `Architecture`
 ![alt text](image.png)
 
+## `Ansible`
+1.Write the necessary configuration on ansible playbook.
+2.then mentin remote server IP on inventory.ini folder and mention the Ip address group name on the playbookfile host section.
 ## `Frontend`
 1. Create a docker file inside the project
 2. Then build the docker file ### ` docker build -t "image_name"`
